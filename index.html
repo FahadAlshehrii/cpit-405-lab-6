@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+    CPIT-405 - Lab 06: Cookies (Like / Dislike and Comment)
+    Student: Fahad Alshehri
+    ID: 2338900
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Fahad Alshehri - 2338900">
+    <title>Like or Dislike</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="card">
+        <header class="card-header">
+            <h1>Like or Dislike</h1>
+            <p class="hint">You can vote once and leave one comment. Your choices are saved in cookies, so they stay after you reload the page.</p>
+        </header>
+
+        <p id="cookieWarning" class="warning" role="alert" hidden>
+            This browser is not saving cookies for this page, so your vote and comment will be lost when you reload.
+            Open the page through a web server instead, for example with the Live Server extension in VS Code.
+        </p>
+
+        <section class="votes" aria-label="Vote">
+            <button id="likeBtn" class="vote-btn like" type="button" aria-pressed="false">
+                <span aria-hidden="true">&#128077;</span>
+                <span>Like</span>
+                <span id="likeCount" class="count">0</span>
+            </button>
+            <button id="dislikeBtn" class="vote-btn dislike" type="button" aria-pressed="false">
+                <span aria-hidden="true">&#128078;</span>
+                <span>Dislike</span>
+                <span id="dislikeCount" class="count">0</span>
+            </button>
+        </section>
+        <p id="voteStatus" class="status" role="status"></p>
+
+        <section class="comment-section">
+            <h2>Your comment</h2>
+            <form id="commentForm" class="comment-form" novalidate>
+                <label for="commentInput" class="visually-hidden">Comment</label>
+                <input type="text" id="commentInput" name="comment" maxlength="200" placeholder="Write your comment..." autocomplete="off">
+                <button type="submit" id="commentBtn">Submit</button>
+            </form>
+            <p id="commentStatus" class="status" role="status"></p>
+
+            <ul id="commentList" class="comment-list"></ul>
+        </section>
+
+        <details class="cookie-view">
+            <summary>Cookies saved in this browser</summary>
+            <pre id="cookieView"></pre>
+        </details>
+
+        <button id="resetBtn" class="reset-btn" type="button">Reset vote and comment</button>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

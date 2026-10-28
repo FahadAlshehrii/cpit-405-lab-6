@@ -1,0 +1,280 @@
+/*
+    CPIT-405 - Lab 06: Cookies (Like / Dislike and Comment)
+    Student: Fahad Alshehri
+    ID: 2338900
+*/
+
+/* ---------- Colors ---------- */
+:root {
+    --page: #eef1f5;
+    --card: #ffffff;
+    --text: #1d2433;
+    --muted: #5c6577;
+    --line: #d5dae3;
+    --soft: #f5f7fa;
+    --like: #1f7a5a;
+    --dislike: #b3392f;
+    --primary: #2f5bd3;
+    --dark: #2b3240;
+}
+
+/* ---------- Base ---------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 40px 16px;
+    background-color: var(--page);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+h1,
+h2 {
+    margin: 0;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+h2 {
+    font-size: 19px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* ---------- Card layout ---------- */
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 32px;
+    background-color: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hint {
+    margin: 0;
+    color: var(--muted);
+}
+
+.warning {
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid #e3b341;
+    border-radius: 8px;
+    background-color: #fff8e1;
+    color: #6b4e00;
+    font-size: 15px;
+}
+
+.warning[hidden] {
+    display: none;
+}
+
+/* ---------- Like / Dislike ---------- */
+.votes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.vote-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 16px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    color: #ffffff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.vote-btn.like {
+    background-color: var(--like);
+}
+
+.vote-btn.dislike {
+    background-color: var(--dislike);
+}
+
+.count {
+    min-width: 28px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.22);
+    font-variant-numeric: tabular-nums;
+}
+
+.vote-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.vote-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+/* the option the user picked stays clear and gets an outline */
+.vote-btn[aria-pressed="true"] {
+    opacity: 1;
+    border-color: var(--text);
+}
+
+.status {
+    min-height: 24px;
+    margin: -10px 0 0;
+    color: var(--muted);
+    font-size: 15px;
+}
+
+/* ---------- Comment ---------- */
+.comment-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comment-section .status {
+    margin: 0;
+}
+
+.comment-form {
+    display: flex;
+    gap: 10px;
+}
+
+.comment-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font: inherit;
+}
+
+.comment-form input:disabled {
+    background-color: var(--soft);
+}
+
+.comment-form button {
+    padding: 11px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary);
+    color: #ffffff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.comment-form button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.comment-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.comment-list li {
+    padding: 12px 14px;
+    border-radius: 8px;
+    background-color: var(--soft);
+    overflow-wrap: anywhere;
+}
+
+.comment-list li.empty {
+    color: var(--muted);
+}
+
+.comment-date {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ---------- Cookie viewer ---------- */
+.cookie-view summary {
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cookie-view pre {
+    margin: 8px 0 0;
+    padding: 12px;
+    overflow-x: auto;
+    border-radius: 8px;
+    background-color: var(--soft);
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* ---------- Reset ---------- */
+.reset-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--dark);
+    color: #ffffff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.reset-btn:hover {
+    background-color: #000000;
+}
+
+/* ---------- Focus ---------- */
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 480px) {
+    .card {
+        padding: 22px 18px;
+    }
+
+    .votes {
+        grid-template-columns: 1fr;
+    }
+
+    .comment-form {
+        flex-direction: column;
+    }
+}
