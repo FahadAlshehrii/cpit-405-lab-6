@@ -28,7 +28,7 @@ A Like / Dislike page with a comment box that uses cookies:
 | `vote` | `like` or `dislike` |
 | `likes` | number of likes |
 | `dislikes` | number of dislikes |
-| `comment` | the comment as JSON: `{"text": "...", "date": "..."}` |
+| `comments` | the comments array as JSON: `[{"text": "...", "date": "..."}]` |
 
 The page also has a "Cookies saved in this browser" section that shows these values.
 

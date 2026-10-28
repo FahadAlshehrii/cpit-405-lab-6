@@ -5,7 +5,7 @@
 */
 
 const COOKIE_DAYS = 30;
-const COOKIE_NAMES = ['vote', 'likes', 'dislikes', 'comment'];
+const COOKIE_NAMES = ['vote', 'likes', 'dislikes', 'comments'];
 
 /* ---------- Cookie helpers ---------- */
 
@@ -54,15 +54,17 @@ const resetBtn = document.getElementById('resetBtn');
 
 /* ---------- State (loaded from cookies) ---------- */
 
-// The comment is saved as JSON: { "text": "...", "date": "2026-10-28T..." }
-function readComment() {
-    const saved = getCookie('comment');
-    if (!saved) return null;
+// Comments are saved as a JSON array: [{ "text": "...", "date": "2026-10-28T..." }]
+function readComments() {
+    const saved = getCookie('comments');
+    if (!saved) return [];
     try {
-        const comment = JSON.parse(saved);
-        return typeof comment.text === 'string' ? comment : null;
+        const comments = JSON.parse(saved);
+        return Array.isArray(comments)
+            ? comments.filter((comment) => comment && typeof comment.text === 'string')
+            : [];
     } catch {
-        return null;
+        return [];
     }
 }
 
@@ -71,9 +73,12 @@ function loadState() {
         vote: getCookie('vote'), // "like", "dislike" or null
         likes: Number(getCookie('likes')) || 0,
         dislikes: Number(getCookie('dislikes')) || 0,
-        comment: readComment(),
+        comments: readComments(),
     };
 }
+
+// one comment per user: once the user has a saved comment, commenting is closed
+const hasCommented = () => state.comments.length > 0;
 
 let state = loadState();
 
@@ -88,24 +93,27 @@ function render() {
     likeBtn.setAttribute('aria-pressed', String(state.vote === 'like'));
     dislikeBtn.setAttribute('aria-pressed', String(state.vote === 'dislike'));
 
-    // comment
-    commentInput.disabled = state.comment !== null;
-    commentBtn.disabled = state.comment !== null;
+    // comments
+    commentInput.disabled = hasCommented();
+    commentBtn.disabled = hasCommented();
 
     commentList.replaceChildren();
-    const item = document.createElement('li');
-    if (state.comment) {
+    state.comments.forEach((comment) => {
+        const item = document.createElement('li');
         // textContent shows the comment as plain text, so HTML in it is not run
-        item.textContent = state.comment.text;
+        item.textContent = comment.text;
         const date = document.createElement('span');
         date.className = 'comment-date';
-        date.textContent = new Date(state.comment.date).toLocaleString();
+        date.textContent = new Date(comment.date).toLocaleString();
         item.append(date);
-    } else {
-        item.className = 'empty';
-        item.textContent = 'No comment yet.';
+        commentList.append(item);
+    });
+    if (state.comments.length === 0) {
+        const empty = document.createElement('li');
+        empty.className = 'empty';
+        empty.textContent = 'No comments yet.';
+        commentList.append(empty);
     }
-    commentList.append(item);
 
     // cookie viewer
     const lines = COOKIE_NAMES
@@ -134,6 +142,12 @@ function vote(choice) {
 
     render();
     voteStatus.textContent = `Thanks! You voted ${choice}.`;
+
+    // restart the "bump" animation on the count that changed
+    const count = choice === 'like' ? likeCount : dislikeCount;
+    count.classList.remove('bump');
+    void count.offsetWidth;
+    count.classList.add('bump');
 }
 
 likeBtn.addEventListener('click', () => vote('like'));
@@ -144,7 +158,7 @@ dislikeBtn.addEventListener('click', () => vote('dislike'));
 commentForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    if (state.comment) {
+    if (hasCommented()) {
         commentStatus.textContent = 'You already left a comment. Press Reset to comment again.';
         return;
     }
@@ -156,8 +170,8 @@ commentForm.addEventListener('submit', (event) => {
         return;
     }
 
-    state.comment = { text, date: new Date().toISOString() };
-    setCookie('comment', JSON.stringify(state.comment));
+    state.comments.push({ text, date: new Date().toISOString() });
+    setCookie('comments', JSON.stringify(state.comments));
     commentInput.value = '';
 
     render();
@@ -170,7 +184,7 @@ resetBtn.addEventListener('click', () => {
     if (!confirm('Reset your vote and comment?')) return;
 
     COOKIE_NAMES.forEach(deleteCookie);
-    state = { vote: null, likes: 0, dislikes: 0, comment: null };
+    state = { vote: null, likes: 0, dislikes: 0, comments: [] };
     commentInput.value = '';
 
     render();
