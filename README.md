@@ -5,6 +5,7 @@
 | **Student** | Fahad Alshehri |
 | **ID** | 2338900 |
 | **Course** | CPIT-405 |
+| **Live page** | https://fahadalshehrii.github.io/cpit-405-lab-6/ |
 
 ## Task
 
